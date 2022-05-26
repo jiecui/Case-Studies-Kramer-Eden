@@ -32,3 +32,4 @@ models/
 gcp-vscode-ssh/
 *.json
 .Rhistory
+.DS_store
