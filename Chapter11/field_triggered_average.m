@@ -1,4 +1,4 @@
-function [pta, phase, phi] = phase_triggered_average(n, y, t, pass_band, options)
+function [fta, phase, phi] = field_triggered_average(n, y, t, pass_band, options)
 
     arguments
         n (:, :) double {mustBeNumeric, mustBeReal}
@@ -21,16 +21,16 @@ function [pta, phase, phi] = phase_triggered_average(n, y, t, pass_band, options
     Wn = pass_band / fNQ;
     b = fir1(ord, Wn);
 
-    % estimate PTA
+    % estimate fta
     phase = linspace(-pi, pi, N);
-    pta = zeros(K, N);
+    fta = zeros(K, N);
     phi = zeros(K, N); %Create variable to hold phase.
 
     for k = 1:K
         Vlo = filtfilt(b, 1, y(k, :));
         phi_k = angle(hilbert(Vlo)); % instantaneous phase of signal
         [~, indices] = sort(phi_k);
-        pta(k, :) = n(k, indices);
+        fta(k, :) = n(k, indices);
         phi(k, :) = phi_k;
     end % for
 
