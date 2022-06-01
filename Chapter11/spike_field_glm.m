@@ -12,10 +12,9 @@ function [model, eval] = spike_field_glm(n, phi, options)
 
     eval_pha = options.EvalPhase;
 
-    n = n(:); %Convert spike matrix to vector.
     phi = phi(:); %Convert phase matrix to vector.
     X = [cos(phi) sin(phi)]; %Create a matrix of predictors.
-    Y = [n]; %Create a vector of responses.
+    Y = n(:); %Create a vector of responses.
     [b, dev, stats] = glmfit(X, Y, 'poisson'); %Fit the GLM.
 
     phi0 = transpose(eval_pha); %Define new phase interval,
