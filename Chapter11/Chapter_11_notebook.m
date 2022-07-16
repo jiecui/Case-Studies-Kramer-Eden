@@ -107,7 +107,7 @@ addpath(genpath('~/Documents/Richard/ComputationalToolbox/neurophysiology_signal
 load('Ch11-spikes-LFP-1.mat') % load the multiscale dat
 
 % %% [markdown]
-% ### Estimate spke-field coherence using Chronux toolbox
+% ### Estimate spike-field coherence using Chronux toolbox
 
 % %%
 N = size(y, 2);
