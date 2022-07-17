@@ -77,9 +77,11 @@ addpath(genpath('~/Documents/Richard/Projects/rochester/mayo_clinic/nonuniform_s
 % #### estimate spectrum
 
 % %%
+import mtnusp.NUContinuous
+
 TW = 40;
 f_qf = 0:.1:fNQ / 2;
-nus = NUSpectrum(x - mean(x), t);
+nus = NUContinuous(x - mean(x), t);
 J = nus.mtnufft('QuerryFrequencies', f_qf, 'TimeHalfbandwidth', TW);
 J = J / 3.5/10;
 
@@ -178,7 +180,7 @@ xlabel('Time [s]')
 title('Phase')
 
 linkaxes([ax_lo, ax_hi], 'x')
-xlim(ax_hi, [4 5])
+xlim([4 5])
 sgtitle('Figure 7.4a Low frequency signal and phase')
 
 
