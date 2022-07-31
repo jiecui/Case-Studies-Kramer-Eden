@@ -71,7 +71,7 @@ function [r, r_CI] = GLM_CFC(Vlo, Vhi, nCtlPts, varargin)
       plot([phi0(imx) phi0(imx)], [null0(imx), spline0(imx)], 'LineWidth', 2)
       hold off
       ylabel('Amplitude')
-      xlabel('Phase')
+      xlabel('Phase [radian]')
       axis tight
   end
   
