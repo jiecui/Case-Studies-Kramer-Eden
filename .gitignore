@@ -27,6 +27,7 @@ models/
 *.m~
 *.asv
 *.npy
+*.mat
 .vscode/
 .*.m
 gcp-vscode-ssh/
