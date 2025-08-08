@@ -71,7 +71,7 @@ title('Figure 7.2 Spectrum of LFP data')
 % * on cortex
 
 % %%
-addpath(genpath('~/Documents/Richard/Projects/rochester/mayo_clinic/nonuniform_signal'))
+addpath(genpath('~/Documents/Richard/ComputationalToolbox/utility/mtnufft'))
 
 % %% [markdown]
 % #### estimate spectrum
@@ -83,7 +83,6 @@ TW = 40;
 f_qf = 0:.1:fNQ / 2;
 nus = NUContinuous(x - mean(x), t);
 J = nus.mtnufft('QuerryFrequencies', f_qf, 'TimeHalfbandwidth', TW);
-J = J / 3.5/10;
 
 % %% [markdown]
 % #### plot
@@ -195,5 +194,95 @@ plot(t, amp, 'LineWidth', 2)
 xlim([4 5])
 xlabel('Time [s]')
 title('Figure 7.4b High frequency signal and amplitude')
+
+% %% [markdown]
+% ### Determine if the phase and Amplitude are related
+
+% %% [markdown]
+% #### Method-1: Phase-amplitude plot
+
+% %%
+p_bins = -pi:.1:pi;
+a_mean = zeros(length(p_bins) - 1, 1);
+p_mean = zeros(length(p_bins) - 1, 1);
+
+% %%
+for k = 1:length(p_bins) - 1
+    pL = p_bins(k);
+    pR = p_bins(k + 1);
+    indices = find(phi >= pL & phi < pR);
+    a_mean(k) = mean(amp(indices));
+    p_mean(k) = mean([pL, pR]);
+end % for
+
+% Difference between max and min modulation
+h=max(a_mean)-min(a_mean);
+
+% %% [markdown]
+% #### plot Figure 7.7
+
+% %%
+figure
+
+plot(p_mean, a_mean, 'k', LineWidth = 1)
+hold on
+plot([2 2], [max(a_mean) - h, max(a_mean)], 'b', LineWidth = 1)
+xlim tight
+ylim([0 .2])
+xlabel('Low-Frequency phase [radian]')
+ylabel('Hight-Frequency amplitude')
+title('Figure 7.7a Average amplitude and phase')
+
+
+% %%
+n_surrogates = 1000;
+hS = zeros(n_surrogates, 1);
+
+for ns = 1:n_surrogates
+    ampS = amp(randperm(length(amp)));
+    p_bins = -pi:.1:pi;
+    a_mean = zeros(length(p_bins) - 1, 1);
+    p_mean = zeros(length(p_bins) - 1, 1);
+
+    for k = 1:length(p_bins) - 1
+        pL = p_bins(k);
+        pR = p_bins(k + 1);
+        indeces = find(phi >= pL & phi <= pR);
+        a_mean(k) = mean(ampS(indeces));
+        p_mean(k) = mean([pL, pR]);
+    end % for
+
+    hS(ns) = max(a_mean) - min(a_mean);
+
+end % for
+
+p = length(find(hS > h)) / length(hS); % p-value
+fprintf('p-value: %.4f\n', p)
+
+
+% %%
+figure
+
+histogram(hS, 'Normalization', 'probability');
+hold on
+plot(ones(1, 2) * h, ylim, 'r', 'linewidth', 1)
+xlim([0 0.14])
+xlabel('h')
+ylabel('Propostion')
+title('Figure 7.7b Distribution of surrogate h vs true h')
+
+
+% %% [markdown]
+% ### Method 2: GLM approach
+
+% %%
+nCtlPts = 8; % define number of control points
+[r, r_CI] = GLM_CFC(Vlo, Vhi, nCtlPts); % comput statistic r
+
+fprintf('R = %.2f, Confidence interval = [%.2f, %.2f]\n', r, r_CI(1), r_CI(2))
+
+ylim(gca, [0 .2])
+title(gca, 'Figure 7.8 GLM fits to amplitude as a function of phase')
+
 
 
