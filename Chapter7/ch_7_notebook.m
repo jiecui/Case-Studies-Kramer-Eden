@@ -2,6 +2,31 @@
 % # Chapter 7 Investigation of Cross-Frequency Coupling in a Local Field Potential
 
 % %% [markdown]
+% ## Add directories of multitaple spectrum estimation
+
+% %%
+[~, host_name] = system('hostname');
+host_name = strtrim(host_name); % Remove any trailing newline characters
+
+switch host_name
+    case 'Cortex.local'
+        richard_root = fullfile('/Users', 'Jie', 'Documents', 'Richard');
+    otherwise
+        fprintf('Warning: Unknown hostname %s. Using default path.\n', host_name);
+        % Default path for Richard's documents
+        % Adjust this path as necessary for your system
+        % For example, on a Windows machine, it might look like:
+        % richard_root = fullfile('C:', 'Users', 'Richard', 'Documents');
+        richard_root = fullfile('~', 'Documents', 'Richard');
+end % switch
+
+
+% %%
+m2nufft_root = fullfile(richard_root, 'ComputationalToolbox', 'utility', 'mtnufft');
+addpath(genpath(m2nufft_root))
+
+
+% %% [markdown]
 % ## Step 1 Visual inspection
 
 % %% [markdown]
@@ -63,15 +88,6 @@ title('Figure 7.2 Spectrum of LFP data')
 
 % %% [markdown]
 % ### 2.2 Using multitaper method to estimate spectrum
-
-% %% [markdown]
-% #### add directories
-
-% %% [markdown]
-% * on cortex
-
-% %%
-addpath(genpath('~/Documents/Richard/ComputationalToolbox/utility/mtnufft'))
 
 % %% [markdown]
 % #### estimate spectrum
@@ -206,7 +222,6 @@ p_bins = -pi:.1:pi;
 a_mean = zeros(length(p_bins) - 1, 1);
 p_mean = zeros(length(p_bins) - 1, 1);
 
-% %%
 for k = 1:length(p_bins) - 1
     pL = p_bins(k);
     pR = p_bins(k + 1);
@@ -216,7 +231,8 @@ for k = 1:length(p_bins) - 1
 end % for
 
 % Difference between max and min modulation
-h=max(a_mean)-min(a_mean);
+h = max(a_mean) - min(a_mean);
+
 
 % %% [markdown]
 % #### plot Figure 7.7
